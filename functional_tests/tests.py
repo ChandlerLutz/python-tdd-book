@@ -90,7 +90,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Francis visits the homepage, there is no sign of Edith's list
         self.browser.get(self.live_server_url)
-        page_text = self.find_element_by_tag_name('body').text
+        page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Buy peacock feathers', page_text)
         self.assertNotIn('make a fly', page_text)
 
@@ -98,7 +98,7 @@ class NewVisitorTest(LiveServerTestCase):
         # He is less interesting than Edith..
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('Buy milk')
-        inputbox.send_keys(Keys.Enter)
+        inputbox.send_keys(Keys.ENTER)
         self.wait_for_row_in_list_table('1: Buy milk')
 
         # Francis gets his own url
@@ -112,19 +112,6 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertIn('Buy milk', page_text)
 
         # Satisfied, they both go back to sleep
-        
-        
-
-        
-        
-        
-
-        
-
-        
-        
-        
-        
         
         
 
