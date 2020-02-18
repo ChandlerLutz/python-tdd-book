@@ -4,3 +4,4 @@ virtualenv
 __pycach__
 *.pyc
 *~
+/static
