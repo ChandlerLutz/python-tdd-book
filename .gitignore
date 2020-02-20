@@ -5,3 +5,4 @@ __pycach__
 *.pyc
 *~
 /static
+.env
