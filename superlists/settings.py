@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -19,15 +20,39 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-if 'DJANGO_DEBUG_FALSE' in os.environ:
-    DEBUG = False
-    SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
-    ALLOWED_HOSTS = [os.environ['SITENAME']]
-else:
-    DEBUG = True
+##from https://django-environ.readthedocs.io/en/latest/
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+
+## from https://github.com/joke2k/django-environ/issues/76#issuecomment-261798369
+base = environ.Path(__file__) - 2 # two folders back (/a/b/ - 2 = /)
+# reading .env file
+environ.Env.read_env(env_file=base('.env'))
+
+
+DEBUG = env('DEBUG')
+
+if DEBUG == True:
     SECRET_KEY = 'insecure-key-for-dev'
     ALLOWED_HOSTS = []
+else:
+    SECRET_KEY = env('SECRET_KEY')
+    ALLOWED_HOSTS = env('SITENAME')
+    
+
+
+
+# SECURITY WARNING: keep the secret key used in production secret!
+# if 'DJANGO_DEBUG_FALSE' in os.environ:
+#     DEBUG = False
+#     SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
+#     ALLOWED_HOSTS = [os.environ['SITENAME']]
+# else:
+#     DEBUG = True
+#     SECRET_KEY = 'insecure-key-for-dev'
+#     ALLOWED_HOSTS = []
 
 # Application definition
 
