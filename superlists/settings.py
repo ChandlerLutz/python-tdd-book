@@ -41,9 +41,6 @@ else:
     SECRET_KEY = env('SECRET_KEY')
     ALLOWED_HOSTS = env('SITENAME')
     
-
-
-
 # SECURITY WARNING: keep the secret key used in production secret!
 # if 'DJANGO_DEBUG_FALSE' in os.environ:
 #     DEBUG = False
