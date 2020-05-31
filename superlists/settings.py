@@ -60,7 +60,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'lists', 
+    'lists',
+    'accounts', 
+]
+
+AUTH_USER_MODEL = 'accounts.User'
+AUTHENTICATION_BACKENDS = [
+    'accounts.authentication.PasswordlessAuthenticationBackend',
 ]
 
 MIDDLEWARE = [
@@ -161,3 +167,9 @@ LOGGING = {
     },
     'root': {'level': 'INFO'},
 }
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'cjl.send.spam@gmail.com'
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
