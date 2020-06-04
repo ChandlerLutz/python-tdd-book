@@ -12,6 +12,10 @@ SUBJECT = 'Your login link for Superlists'
 class LoginTest(FunctionalTest):
 
     def wait_for_email(self, test_email, subject):
+        ## Add a sleep as gmail needs some time to send and get the email
+        ## (could be a windows thing)
+        ## http://disq.us/p/25alejy
+        time.sleep(3) 
         if not self.staging_server:
             email = mail.outbox[0]
             self.assertIn(test_email, email.to)
@@ -50,7 +54,7 @@ class LoginTest(FunctionalTest):
             test_email = 'recent:' + 'cjl.send.spam@gmail.com'
         else:
             test_email = 'edith@example.com'
-        
+        print(test_email)
         self.browser.get(self.live_server_url)
         self.browser.find_element_by_name('email').send_keys(test_email)
         self.browser.find_element_by_name('email').send_keys(Keys.ENTER)
@@ -70,7 +74,7 @@ class LoginTest(FunctionalTest):
             self.fail(f'Could not find url in email body:\n{body}')
         url = url_search.group(0)
         self.assertIn(self.live_server_url, url)
-
+        
         # She clicks it
         self.browser.get(url)
 
