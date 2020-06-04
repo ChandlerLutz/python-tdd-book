@@ -3,8 +3,10 @@ import os
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
+from selenium.webdriver.common.keys import Keys
 import time
 from .server_tools import reset_database
+
 
 MAX_WAIT = 10
 
@@ -58,7 +60,7 @@ class FunctionalTest(StaticLiveServerTestCase):
         self.assertNotIn(email, navbar.text)
 
     def add_list_item(self, item_text):
-        num_rows = len(self.browser.find_elements_by_css_selector('#ids_list_table tr'))
+        num_rows = len(self.browser.find_elements_by_css_selector('#id_list_table tr'))
         self.get_item_input_box().send_keys(item_text)
         self.get_item_input_box().send_keys(Keys.ENTER)
         item_number = num_rows + 1
