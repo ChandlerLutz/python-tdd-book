@@ -15,10 +15,7 @@ SCREEN_DUMP_LOCATION = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'screendumps'
 )
 
-
 MAX_WAIT = 10
-
-
 
 def wait(fn):
     def modified_fn(*args, **kwargs):
@@ -31,7 +28,6 @@ def wait(fn):
                     raise e
                 time.sleep(0.5)
     return modified_fn
-
 
 class FunctionalTest(StaticLiveServerTestCase):
 

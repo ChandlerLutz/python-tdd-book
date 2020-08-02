@@ -92,7 +92,6 @@ class NewListViewIntegratedTest(TestCase):
         list_ = List.objects.first()
         self.assertEqual(list_.owner, user)
 
-
 class ListViewTest(TestCase):
 
     def test_uses_list_template(self):
@@ -206,4 +205,48 @@ class MyListsTest(TestCase):
         correct_user = User.objects.create(email='a@b.com')
         response = self.client.get('/lists/users/a@b.com/')
         self.assertEqual(response.context['owner'], correct_user)
+        
+class ShareListTest(TestCase):
+
+    def test_can_share_list_with_existing_user(self):
+        user = User.objects.create(email='a@b.com')
+        self.client.force_login(user)
+        friend = User.objects.create(email='friend@example.com')
+        list_ = List.objects.create(owner=user)
+        response = self.client.post(f'/lists/{list_.id}/share', data={'sharee': 'friend@example.com'})
+        self.assertEqual(list_.shared_with.count(), 1)
+        self.assertIn(friend, list_.shared_with.all())
+
+
+    def test_can_share_list_with_new_user(self):
+        user = User.objects.create(email='a@b.com')
+        self.client.force_login(user)
+        list_ = List.objects.create(owner=user)
+        Item.objects.create(text='list item 1', list=list_)
+        response = self.client.post(f'/lists/{list_.id}/share', data={'sharee': 'friend@example.com'})
+        new_sharee = list_.shared_with.get(email='friend@example.com')
+        self.assertEqual(list_.shared_with.count(), 1)
+        ##From https://stackoverflow.com/a/51905746/1317443
+        self.assertIn(getattr(new_sharee, 'email'), 'friend@example.com') 
+    
+    def test_POST_redirects_to_lists_page(self):
+        user = User.objects.create(email='a@b.com')
+        self.client.force_login(user)
+        list_ = List.objects.create(owner=user)
+        response = self.client.post(f'/lists/{list_.id}/share', data={'sharee': 'friend@example.com'})
+        self.assertRedirects(response, f'/lists/{list_.id}/')
+
+    # def test_can_share_list_with_multiple_users(self):
+    #     self.fail()
+
+    # def test_cannot_share_list_without_owner(self):
+    #     self.fail()
+
+    # def test_share_link_only_visible_to_authenticated_owners(self):
+    #     self.fail()
+        
+        
+        
+        
+        
         

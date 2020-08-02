@@ -46,9 +46,15 @@ class ListModelTest(TestCase):
         Item.objects.create(list=list_, text='first item')
         Item.objects.create(list=list_, text='second item')
         self.assertEqual(list_.name, 'first item')
-        
-        
 
+    def test_list_can_be_shared_with_friend(self):
+        user = User.objects.create(email='a@b.com')
+        friend = User.objects.create(email='friend@example.com')
+        list_ = List.objects.create(owner=user)
+        Item.objects.create(text='list item 1', list=list_)
+        list_.shared_with.add(friend) # should not raise
+        self.assertIn(friend, list_.shared_with.all())
+        
 class ListAndItemModelTest(TestCase):
 
     def test_item_is_related_to_list(self):

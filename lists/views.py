@@ -30,5 +30,16 @@ def view_list(request, list_id):
 
 
 def my_lists(request, email):
-    owner = User.objects.get(email=email)
-    return render(request, 'my_lists.html', {'owner': owner})
+    user = User.objects.get(email=email)
+    shared_lists = List.objects.all().filter(shared_with=user)
+    return render(request, 'my_lists.html', {'owner': user, "shared_lists": shared_lists})
+
+def share_list(request, list_id):
+    list_ = List.objects.get(id=list_id)
+    sharee_email = request.POST['sharee']
+    ##from https://simpleisbetterthancomplex.com/tips/2016/07/14/django-tip-6-get-or-create.html
+    sharee, created = User.objects.get_or_create(email=sharee_email)
+    list_.shared_with.add(sharee)
+    return redirect(list_) ## from https://realpython.com/django-redirects/
+    ##return redirect('view_list', list_.id) ##if get_absolute_url() wasn't defined in lists.models.List
+
